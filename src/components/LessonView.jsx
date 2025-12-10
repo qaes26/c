@@ -3,7 +3,7 @@ import Footer from './Footer';
 import { courseContent } from '../data/courseContent';
 import { BookOpen, Star, ChevronLeft, Award, PlayCircle, Zap } from 'lucide-react';
 
-const LessonView = ({ lesson, onOpenMenu, onStartLevel }) => {
+const LessonView = ({ lesson, onOpenMenu, onStartLevel, onBack }) => {
 
     const handleLevelClick = (level) => {
         // Find the first lesson of the clicked level
@@ -77,7 +77,17 @@ const LessonView = ({ lesson, onOpenMenu, onStartLevel }) => {
     return (
         <div className="content-area">
             <div className="content-wrapper">
-                <h1 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>{lesson.title}</h1>
+                <div className="lesson-header-action" style={{ display: 'flex', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <button
+                        className="btn-icon back-button"
+                        onClick={onBack}
+                        title="العودة للقائمة"
+                    >
+                        <ChevronLeft size={28} />
+                    </button>
+                    <h1 style={{ color: 'var(--primary)', margin: 0, marginRight: '1rem' }}>{lesson.title}</h1>
+                </div>
+
                 <div
                     className="lesson-content"
                     dangerouslySetInnerHTML={{ __html: lesson.content }}

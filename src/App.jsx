@@ -70,6 +70,7 @@ const App = () => {
             lesson={selectedLesson}
             onOpenMenu={() => setIsMobileMenuOpen(true)}
             onStartLevel={handleSelectLesson}
+            onBack={() => setSelectedLesson(null)}
           />
         )}
       </div>

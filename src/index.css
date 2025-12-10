@@ -886,8 +886,42 @@ code {
   text-align: center;
 }
 
-/* Mobile Tweaks for Big Squares */
+
+/* ---------------------------------------------------------
+   BACK BUTTON STYLES
+--------------------------------------------------------- */
+.back-button {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.back-button:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  transform: translateX(3px);
+  /* Move slightly right (RTL logic) */
+  border-color: var(--primary);
+}
+
+.lesson-header-action h1 {
+  font-size: 1.8rem;
+}
+
 @media (max-width: 768px) {
+  .lesson-header-action h1 {
+    font-size: 1.4rem;
+  }
+
   .dashboard-grid.big-squares {
     grid-template-columns: 1fr;
     /* Stack on mobile */
