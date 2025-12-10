@@ -1,37 +1,39 @@
 import React, { useState } from 'react';
-import { quizQuestions } from '../data/quizData';
-import { CheckCircle, XCircle, RefreshCw } from 'lucide-react';
+import { quizData } from '../data/quizData';
 
 const QuizView = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState({});
-    const [showResults, setShowResults] = useState(false);
+    const [showResult, setShowResult] = useState(false);
 
-    const handleAnswer = (optionIndex) => {
-        setUserAnswers(prev => ({
-            ...prev,
-            [currentQuestionIndex]: optionIndex
-        }));
+    const currentQuestion = quizData[currentQuestionIndex];
+    const totalQuestions = quizData.length;
+
+    const handleAnswerSelect = (optionIndex) => {
+        setUserAnswers({
+            ...userAnswers,
+            [currentQuestion.id]: optionIndex
+        });
     };
 
     const handleNext = () => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
-            setCurrentQuestionIndex(prev => prev + 1);
+        if (currentQuestionIndex < totalQuestions - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-            setShowResults(true);
+            setShowResult(true);
         }
     };
 
     const handlePrev = () => {
         if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex(prev => prev - 1);
+            setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
     };
 
     const calculateScore = () => {
         let score = 0;
-        quizQuestions.forEach((q, index) => {
-            if (userAnswers[index] === q.answer) {
+        quizData.forEach(q => {
+            if (userAnswers[q.id] === q.correctAnswer) {
                 score++;
             }
         });
@@ -41,85 +43,74 @@ const QuizView = () => {
     const resetQuiz = () => {
         setCurrentQuestionIndex(0);
         setUserAnswers({});
-        setShowResults(false);
+        setShowResult(false);
     };
 
-    if (showResults) {
+    if (showResult) {
         const score = calculateScore();
-        const percentage = (score / quizQuestions.length) * 100;
+        const passed = score >= (totalQuestions / 2);
 
         return (
-            <div className="main-content" style={{ textAlign: 'center', padding: '3rem' }}>
-                <h2 style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>نتيجة الاختبار النهائي</h2>
-
-                <div style={{
-                    fontSize: '4rem',
-                    fontWeight: 'bold',
-                    color: percentage >= 50 ? 'green' : 'red',
-                    marginBottom: '1rem'
-                }}>
-                    {score} / {quizQuestions.length}
+            <div className="content-area">
+                <div className="content-wrapper" style={{ textAlign: 'center' }}>
+                    <h2 style={{ color: passed ? 'var(--success)' : 'var(--error)' }}>
+                        {passed ? 'مبروك! لقد اجتزت الاختبار' : 'للأسف، لم تجتز الاختبار'}
+                    </h2>
+                    <p style={{ fontSize: '1.5rem', margin: '2rem 0' }}>
+                        النتيجة: {score} / {totalQuestions}
+                    </p>
+                    <button className="btn btn-primary" onClick={resetQuiz}>
+                        إعادة الاختبار
+                    </button>
                 </div>
-
-                <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>
-                    {percentage >= 50 ? 'مبروك! لقد اجتزت الاختبار.' : 'حاول مرة أخرى لتحسين مستواك.'}
-                </p>
-
-                <button onClick={resetQuiz} className="btn" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 auto' }}>
-                    <RefreshCw size={20} /> إعادة الاختبار
-                </button>
             </div>
         );
     }
 
-    const question = quizQuestions[currentQuestionIndex];
-
     return (
-        <div className="main-content">
-            <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-                    <h2 style={{ color: 'var(--primary-color)' }}>الاختبار النهائي الشامل</h2>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                        السؤال {currentQuestionIndex + 1} من {quizQuestions.length}
-                    </span>
-                </div>
+        <div className="content-area">
+            <div className="content-wrapper">
+                <div className="quiz-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
+                        <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
+                            سؤال {currentQuestionIndex + 1} من {totalQuestions}
+                        </span>
+                        <span>التقدم: {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%</span>
+                    </div>
 
-                <div className="card">
-                    <h3 style={{ marginBottom: '1.5rem', fontSize: '1.3rem' }}>{question.question}</h3>
+                    <h3 style={{ fontSize: '1.3rem', marginBottom: '2rem' }}>{currentQuestion.question}</h3>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {question.options.map((option, index) => (
+                    <div className="options-list">
+                        {currentQuestion.options.map((option, index) => (
                             <div
                                 key={index}
-                                onClick={() => handleAnswer(index)}
-                                style={{
-                                    padding: '1rem',
-                                    border: '2px solid',
-                                    borderColor: userAnswers[currentQuestionIndex] === index ? 'var(--primary-color)' : 'var(--border-color)',
-                                    borderRadius: '8px',
-                                    cursor: 'pointer',
-                                    backgroundColor: userAnswers[currentQuestionIndex] === index ? 'var(--primary-light)' : 'white',
-                                    transition: 'all 0.2s'
-                                }}
+                                className={`option-card ${userAnswers[currentQuestion.id] === index ? 'selected' : ''}`}
+                                onClick={() => handleAnswerSelect(index)}
                             >
                                 {option}
                             </div>
                         ))}
                     </div>
-                </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
-                    <button
-                        onClick={handlePrev}
-                        className="btn"
-                        style={{ backgroundColor: 'var(--text-light)', visibility: currentQuestionIndex === 0 ? 'hidden' : 'visible' }}
-                    >
-                        السابق
-                    </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={handlePrev}
+                            disabled={currentQuestionIndex === 0}
+                            style={{ opacity: currentQuestionIndex === 0 ? 0.5 : 1 }}
+                        >
+                            السابق
+                        </button>
 
-                    <button onClick={handleNext} className="btn">
-                        {currentQuestionIndex === quizQuestions.length - 1 ? 'إنهاء الاختبار' : 'التالي'}
-                    </button>
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleNext}
+                            disabled={userAnswers[currentQuestion.id] === undefined}
+                            style={{ opacity: userAnswers[currentQuestion.id] === undefined ? 0.5 : 1 }}
+                        >
+                            {currentQuestionIndex === totalQuestions - 1 ? 'إنهاء الاختبار' : 'التالي'}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

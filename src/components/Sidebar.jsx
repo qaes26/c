@@ -1,85 +1,56 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronLeft, Circle, Book, Award } from 'lucide-react';
+import { courseContent } from '../data/courseContent';
+import { ChevronDown, ChevronLeft, BookOpen, GraduationCap } from 'lucide-react';
 
-const Sidebar = ({ content, currentLesson, onSelectLesson, onSelectQuiz, isQuizMode }) => {
-    const [expandedLevels, setExpandedLevels] = useState({});
-    const [expandedModules, setExpandedModules] = useState({});
+const Sidebar = ({ onSelectLesson, onSelectQuiz, isQuizMode }) => {
+    const [expandedLevels, setExpandedLevels] = useState(['level-1']);
+    const [expandedModules, setExpandedModules] = useState(['intro']);
 
     const toggleLevel = (levelId) => {
-        setExpandedLevels(prev => ({ ...prev, [levelId]: !prev[levelId] }));
+        setExpandedLevels(prev =>
+            prev.includes(levelId) ? prev.filter(id => id !== levelId) : [...prev, levelId]
+        );
     };
 
     const toggleModule = (moduleId) => {
-        setExpandedModules(prev => ({ ...prev, [moduleId]: !prev[moduleId] }));
+        setExpandedModules(prev =>
+            prev.includes(moduleId) ? prev.filter(id => id !== moduleId) : [...prev, moduleId]
+        );
     };
 
     return (
-        <aside style={{
-            width: 'var(--sidebar-width)',
-            backgroundColor: 'var(--white)',
-            borderLeft: '1px solid var(--border-color)',
-            overflowY: 'auto',
-            height: '100%',
-            padding: '1rem'
-        }}>
-            {/* Course Content */}
-            {content.map(level => (
-                <div key={level.id} style={{ marginBottom: '0.5rem' }}>
+        <div className="app-sidebar">
+            {courseContent.map((level) => (
+                <div key={level.id} className="level-card">
                     <div
+                        className="level-header"
                         onClick={() => toggleLevel(level.id)}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '0.8rem',
-                            backgroundColor: '#e9ecef',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            fontWeight: 'bold',
-                            color: 'var(--secondary-color)',
-                            marginBottom: '0.5rem'
-                        }}
                     >
-                        <span style={{ fontSize: '0.9rem' }}>{level.title}</span>
-                        {expandedLevels[level.id] ? <ChevronDown size={16} /> : <ChevronLeft size={16} />}
+                        <span>{level.title}</span>
+                        {expandedLevels.includes(level.id) ? <ChevronDown size={18} /> : <ChevronLeft size={18} />}
                     </div>
 
-                    {expandedLevels[level.id] && (
-                        <div style={{ paddingRight: '0.5rem' }}>
-                            {level.modules.map(module => (
-                                <div key={module.id} style={{ marginBottom: '0.5rem' }}>
+                    {expandedLevels.includes(level.id) && (
+                        <div>
+                            {level.modules.map((module) => (
+                                <div key={module.id}>
                                     <div
+                                        className="module-item"
                                         onClick={() => toggleModule(module.id)}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '0.5rem',
-                                            padding: '0.5rem',
-                                            cursor: 'pointer',
-                                            fontSize: '0.9rem',
-                                            color: 'var(--text-color)',
-                                            fontWeight: '500'
-                                        }}
                                     >
-                                        <Book size={14} />
-                                        <span>{module.title}</span>
+                                        <div className="module-title">
+                                            <BookOpen size={16} color="var(--primary)" />
+                                            <span>{module.title}</span>
+                                        </div>
                                     </div>
 
-                                    {expandedModules[module.id] && (
-                                        <div style={{ paddingRight: '1rem', borderRight: '2px solid #eee' }}>
-                                            {module.lessons.map(lesson => (
+                                    {expandedModules.includes(module.id) && (
+                                        <div className="lesson-list">
+                                            {module.lessons.map((lesson) => (
                                                 <div
                                                     key={lesson.id}
-                                                    onClick={() => onSelectLesson(level.id, module.id, lesson.id)}
-                                                    style={{
-                                                        padding: '0.4rem',
-                                                        cursor: 'pointer',
-                                                        fontSize: '0.85rem',
-                                                        color: (currentLesson?.id === lesson.id && !isQuizMode) ? 'var(--primary-color)' : 'var(--text-light)',
-                                                        backgroundColor: (currentLesson?.id === lesson.id && !isQuizMode) ? 'var(--primary-light)' : 'transparent',
-                                                        borderRadius: '4px',
-                                                        marginTop: '0.2rem'
-                                                    }}
+                                                    className="lesson-item"
+                                                    onClick={() => onSelectLesson(lesson)}
                                                 >
                                                     {lesson.title}
                                                 </div>
@@ -93,28 +64,14 @@ const Sidebar = ({ content, currentLesson, onSelectLesson, onSelectQuiz, isQuizM
                 </div>
             ))}
 
-            {/* Quiz Section */}
             <div
+                className={`quiz-btn ${isQuizMode ? 'active' : ''}`}
                 onClick={onSelectQuiz}
-                style={{
-                    marginTop: '2rem',
-                    padding: '1rem',
-                    backgroundColor: isQuizMode ? 'var(--primary-color)' : 'var(--secondary-color)',
-                    color: 'white',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem',
-                    fontWeight: 'bold',
-                    transition: 'background 0.3s'
-                }}
             >
-                <Award size={24} />
-                <span>الاختبار النهائي (100 سؤال)</span>
+                <GraduationCap size={24} />
+                <span>الاختبار النهائي</span>
             </div>
-        </aside>
+        </div>
     );
 };
 
