@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { courseContent } from '../data/courseContent';
 import { ChevronDown, ChevronLeft, BookOpen, GraduationCap } from 'lucide-react';
 
-const Sidebar = ({ onSelectLesson, onSelectQuiz, isQuizMode }) => {
+const Sidebar = ({ onSelectLesson, onSelectQuiz, isQuizMode, isOpen }) => {
     const [expandedLevels, setExpandedLevels] = useState(['level-1']);
     const [expandedModules, setExpandedModules] = useState(['intro']);
 
@@ -19,7 +19,7 @@ const Sidebar = ({ onSelectLesson, onSelectQuiz, isQuizMode }) => {
     };
 
     return (
-        <div className="app-sidebar">
+        <div className={`app-sidebar ${isOpen ? 'open' : ''}`}>
             {courseContent.map((level) => (
                 <div key={level.id} className="level-card">
                     <div

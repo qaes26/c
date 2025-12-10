@@ -1,10 +1,13 @@
 import React from 'react';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, Menu } from 'lucide-react';
 
-const Header = () => {
+const Header = ({ onToggleMenu }) => {
     return (
         <header className="app-header">
             <div className="brand">
+                <button className="menu-btn" onClick={onToggleMenu}>
+                    <Menu size={24} />
+                </button>
                 <GraduationCap size={32} color="var(--primary)" />
                 <h1>كورس C++ الشامل</h1>
             </div>

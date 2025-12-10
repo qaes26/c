@@ -3,51 +3,74 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import LessonView from './components/LessonView';
 import QuizView from './components/QuizView';
-import { courseContent } from './data/courseContent';
+import LandingPage from './components/LandingPage';
 
-function App() {
-  const [currentLesson, setCurrentLesson] = useState(null);
+const App = () => {
+  const [showLanding, setShowLanding] = useState(true);
+  const [selectedLesson, setSelectedLesson] = useState(null);
   const [isQuizMode, setIsQuizMode] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleSelectLesson = (levelId, moduleId, lessonId) => {
-    const level = courseContent.find(l => l.id === levelId);
-    if (level) {
-      const module = level.modules.find(m => m.id === moduleId);
-      if (module) {
-        const lesson = module.lessons.find(l => l.id === lessonId);
-        if (lesson) {
-          setCurrentLesson(lesson);
-          setIsQuizMode(false);
-        }
-      }
-    }
+  const handleStartLearning = () => {
+    setShowLanding(false);
+  };
+
+  const handleSelectLesson = (lesson) => {
+    setSelectedLesson(lesson);
+    setIsQuizMode(false);
+    setIsMobileMenuOpen(false); // Close sidebar on mobile after selection
   };
 
   const handleSelectQuiz = () => {
     setIsQuizMode(true);
-    setCurrentLesson(null);
+    setSelectedLesson(null);
+    setIsMobileMenuOpen(false);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  if (showLanding) {
+    return <LandingPage onStart={handleStartLearning} />;
+  }
+
   return (
-    <>
-      <Header />
-      <div className="app-container" style={{ marginTop: 'var(--header-height)' }}>
+    <div className="app-layout">
+      <Header onToggleMenu={toggleMobileMenu} />
+      <div className="main-container">
         <Sidebar
-          content={courseContent}
-          currentLesson={currentLesson}
           onSelectLesson={handleSelectLesson}
           onSelectQuiz={handleSelectQuiz}
           isQuizMode={isQuizMode}
+          isOpen={isMobileMenuOpen}
         />
+
+        {/* Overlay for mobile when sidebar is open */}
+        {isMobileMenuOpen && (
+          <div
+            className="mobile-overlay"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0,0,0,0.5)',
+              zIndex: 800
+            }}
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
 
         {isQuizMode ? (
           <QuizView />
         ) : (
-          <LessonView lesson={currentLesson} />
+          <LessonView lesson={selectedLesson} />
         )}
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default App;
