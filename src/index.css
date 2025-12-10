@@ -468,11 +468,14 @@ code {
 
   .author-badge {
     display: none;
-    /* Hide on very small screens or move to menu */
   }
 
   .main-container {
+    display: block;
+    /* Remove flex layout */
     position: relative;
+    height: calc(100vh - var(--header-height));
+    /* Keep fixed height for internal scrolling */
   }
 
   .app-sidebar {
@@ -480,11 +483,13 @@ code {
     top: var(--header-height);
     right: 0;
     bottom: 0;
+    width: var(--sidebar-width);
     z-index: 900;
     transform: translateX(100%);
-    /* Hidden by default (RTL) */
     transition: transform 0.3s ease-in-out;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    border-left: none;
+    /* Remove border in overlay mode */
   }
 
   .app-sidebar.open {
@@ -492,11 +497,29 @@ code {
   }
 
   .content-area {
-    padding: 1.5rem;
+    width: 100%;
+    height: 100%;
+    /* Fill container */
+    padding: 1rem;
+    margin: 0;
   }
 
   .content-wrapper {
     padding: 1.5rem;
+    margin: 0 auto;
+    width: 100%;
+    box-shadow: none;
+    /* Simplify on mobile */
+    background: transparent;
+    /* Or keep white but ensure it fits */
+  }
+
+  /* Ensure content inside wrapper is readable */
+  .content-wrapper>* {
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
   }
 
   .hero-title {
@@ -505,7 +528,6 @@ code {
 
   .menu-btn {
     display: block;
-    /* Will be styled in Header component */
     background: none;
     border: none;
     cursor: pointer;
