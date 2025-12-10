@@ -69,6 +69,7 @@ const App = () => {
           <LessonView
             lesson={selectedLesson}
             onOpenMenu={() => setIsMobileMenuOpen(true)}
+            onStartLevel={handleSelectLesson}
           />
         )}
       </div>

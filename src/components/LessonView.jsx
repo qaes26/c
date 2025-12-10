@@ -1,50 +1,71 @@
 import React from 'react';
 import Footer from './Footer';
 import { courseContent } from '../data/courseContent';
-import { BookOpen, Star, ChevronLeft, Award, PlayCircle } from 'lucide-react';
+import { BookOpen, Star, ChevronLeft, Award, PlayCircle, Zap } from 'lucide-react';
 
-const LessonView = ({ lesson, onOpenMenu }) => {
+const LessonView = ({ lesson, onOpenMenu, onStartLevel }) => {
+
+    const handleLevelClick = (level) => {
+        // Find the first lesson of the clicked level
+        if (level.modules && level.modules.length > 0) {
+            const firstModule = level.modules[0];
+            if (firstModule.lessons && firstModule.lessons.length > 0) {
+                const firstLesson = firstModule.lessons[0];
+                if (onStartLevel) {
+                    onStartLevel(firstLesson);
+                }
+            }
+        } else if (onOpenMenu) {
+            // Fallback if no lessons found or it's the exam
+            onOpenMenu();
+        }
+    };
+
     if (!lesson) {
         return (
             <div className="content-area dashboard-view">
                 <div className="dashboard-header">
-                    <h2>لوحة التحكم</h2>
-                    <p>مرحباً بك في رحلة تعلم C++</p>
+                    <h2>مسارك التعليمي</h2>
+                    <p>اضغط على المستوى لبدء التعلم فوراً</p>
                 </div>
 
-                <div className="dashboard-grid">
+                <div className="dashboard-grid big-squares">
                     {courseContent.map((level, index) => (
-                        <div key={level.id} className="app-card" onClick={onOpenMenu} style={{ animationDelay: `${index * 0.1}s` }}>
-                            <div className="card-icon-wrapper" style={{
+                        <div
+                            key={level.id}
+                            className="app-card big-square-card"
+                            onClick={() => handleLevelClick(level)}
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                            <div className="card-icon-large" style={{
                                 background: `var(--gradient-${(index % 4) + 1})`
                             }}>
-                                <span className="level-number">{index + 1}</span>
+                                <span className="level-number-large">{index + 1}</span>
                             </div>
 
-                            <div className="card-content">
+                            <div className="card-content-center">
                                 <h3>{level.title}</h3>
                                 <p>{level.modules?.length || 0} وحدات تعليمية</p>
-                                <div className="progress-bar">
-                                    <div className="progress-fill" style={{ width: '0%' }}></div>
-                                </div>
                             </div>
 
-                            <div className="card-action">
-                                <PlayCircle size={32} color="var(--primary)" />
+                            <div className="card-action-center">
+                                <span>ابدأ الدرس</span>
+                                <ChevronLeft size={20} />
                             </div>
                         </div>
                     ))}
 
-                    <div className="app-card final-exam-card" onClick={onOpenMenu}>
-                        <div className="card-icon-wrapper" style={{ background: 'var(--gradient-primary)' }}>
-                            <Award size={24} color="white" />
+                    <div className="app-card big-square-card final-exam-card" onClick={onOpenMenu}>
+                        <div className="card-icon-large" style={{ background: 'var(--gradient-primary)' }}>
+                            <Award size={40} color="white" />
                         </div>
-                        <div className="card-content">
+                        <div className="card-content-center">
                             <h3>الاختبار النهائي</h3>
-                            <p>احصل على شهادة إتمام الكورس</p>
+                            <p>احصل على الشهادة</p>
                         </div>
-                        <div className="card-action">
-                            <ChevronLeft size={24} color="#aaa" />
+                        <div className="card-action-center">
+                            <span>اختبر الآن</span>
+                            <ChevronLeft size={20} />
                         </div>
                     </div>
                 </div>

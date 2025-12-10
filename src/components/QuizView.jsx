@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { quizQuestions } from '../data/quizData';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 const QuizView = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -10,6 +11,9 @@ const QuizView = () => {
     const totalQuestions = quizQuestions.length;
 
     const handleAnswerSelect = (optionIndex) => {
+        // Prevent changing answer if already answered
+        if (userAnswers[currentQuestion.id] !== undefined) return;
+
         setUserAnswers({
             ...userAnswers,
             [currentQuestion.id]: optionIndex
@@ -67,6 +71,10 @@ const QuizView = () => {
         );
     }
 
+    const isAnswered = userAnswers[currentQuestion.id] !== undefined;
+    const selectedAnswer = userAnswers[currentQuestion.id];
+    const isCorrect = selectedAnswer === currentQuestion.answer;
+
     return (
         <div className="content-area">
             <div className="content-wrapper">
@@ -81,15 +89,31 @@ const QuizView = () => {
                     <h3 style={{ fontSize: '1.3rem', marginBottom: '2rem' }}>{currentQuestion.question}</h3>
 
                     <div className="options-list">
-                        {currentQuestion.options.map((option, index) => (
-                            <div
-                                key={index}
-                                className={`option-card ${userAnswers[currentQuestion.id] === index ? 'selected' : ''}`}
-                                onClick={() => handleAnswerSelect(index)}
-                            >
-                                {option}
-                            </div>
-                        ))}
+                        {currentQuestion.options.map((option, index) => {
+                            let optionClass = 'option-card';
+
+                            if (isAnswered) {
+                                if (index === currentQuestion.answer) {
+                                    optionClass += ' correct';
+                                } else if (index === selectedAnswer) {
+                                    optionClass += ' wrong';
+                                } else {
+                                    optionClass += ' disabled';
+                                }
+                            }
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={optionClass}
+                                    onClick={() => handleAnswerSelect(index)}
+                                >
+                                    <span>{option}</span>
+                                    {isAnswered && index === currentQuestion.answer && <CheckCircle size={20} />}
+                                    {isAnswered && index === selectedAnswer && index !== currentQuestion.answer && <XCircle size={20} />}
+                                </div>
+                            );
+                        })}
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
@@ -105,8 +129,8 @@ const QuizView = () => {
                         <button
                             className="btn btn-primary"
                             onClick={handleNext}
-                            disabled={userAnswers[currentQuestion.id] === undefined}
-                            style={{ opacity: userAnswers[currentQuestion.id] === undefined ? 0.5 : 1 }}
+                            disabled={!isAnswered}
+                            style={{ opacity: !isAnswered ? 0.5 : 1 }}
                         >
                             {currentQuestionIndex === totalQuestions - 1 ? 'إنهاء الاختبار' : 'التالي'}
                         </button>

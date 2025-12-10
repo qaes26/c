@@ -721,7 +721,137 @@ code {
   margin-bottom: 2.5rem;
 }
 
-/* Mobile Enhancements */
+
+/* ---------------------------------------------------------
+   BIG SQUARES DASHBOARD
+--------------------------------------------------------- */
+.dashboard-grid.big-squares {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+}
+
+.big-square-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  height: 100%;
+  aspect-ratio: 1/1;
+  /* Create square shape initially */
+  min-height: 280px;
+  justify-content: space-between;
+}
+
+.card-icon-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.level-number-large {
+  font-family: 'Fira Code', monospace;
+}
+
+.card-content-center h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--secondary);
+}
+
+.card-content-center p {
+  color: var(--text-muted);
+}
+
+.card-action-center {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0.8;
+  transition: all 0.2s;
+}
+
+.big-square-card:hover .card-action-center {
+  opacity: 1;
+  transform: translateX(-5px);
+}
+
+/* ---------------------------------------------------------
+   QUIZ FEEDBACK STYLES
+--------------------------------------------------------- */
+.option-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.option-card.correct {
+  border-color: var(--success);
+  background: #dcfce7;
+  color: #166534;
+}
+
+.option-card.wrong {
+  border-color: var(--error);
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.option-card.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Mobile Tweaks for Big Squares */
+@media (max-width: 768px) {
+  .dashboard-grid.big-squares {
+    grid-template-columns: 1fr;
+    /* Stack on mobile */
+  }
+
+  .big-square-card {
+    aspect-ratio: auto;
+    /* Remove fixed square ratio on mobile for better fit */
+    flex-direction: row;
+    padding: 1.5rem;
+    min-height: auto;
+    text-align: right;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .card-icon-large {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0;
+    font-size: 1.5rem;
+  }
+
+  .card-content-center {
+    flex: 1;
+    text-align: right;
+  }
+
+  .card-action-center {
+    display: none;
+    /* Hide 'Start' text on mobile small cards to save space */
+  }
+}
+
 @media (max-width: 768px) {
   :root {
     --header-height: 60px;
