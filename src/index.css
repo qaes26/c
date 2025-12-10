@@ -790,30 +790,100 @@ code {
 }
 
 /* ---------------------------------------------------------
-   QUIZ FEEDBACK STYLES
+   PREMIUM QUIZ STYLES
 --------------------------------------------------------- */
+.quiz-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+}
+
+.options-list {
+  display: grid;
+  gap: 1rem;
+}
+
 .option-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1.5rem 2rem;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-body);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.option-card:hover:not(.disabled) {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+  background: white;
 }
 
 .option-card.correct {
   border-color: var(--success);
-  background: #dcfce7;
-  color: #166534;
+  background: #ecfdf5;
+  /* Emerald 50 */
+  color: #065f46;
+  /* Emerald 800 */
+  box-shadow: 0 0 0 1px var(--success);
 }
 
 .option-card.wrong {
   border-color: var(--error);
-  background: #fee2e2;
+  background: #fef2f2;
+  /* Red 50 */
   color: #991b1b;
+  /* Red 800 */
+  opacity: 0.8;
 }
 
 .option-card.disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  pointer-events: none;
+  opacity: 0.5;
+  cursor: default;
+  transform: none !important;
+}
+
+/* Add an indicator line for selected option */
+.option-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.option-card:hover:not(.disabled)::before {
+  background: var(--primary-light);
+}
+
+.option-card.correct::before {
+  background: var(--success);
+}
+
+.option-card.wrong::before {
+  background: var(--error);
+}
+
+/* Quiz Typography */
+.quiz-card h3 {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--secondary);
+  margin-bottom: 2.5rem;
+  text-align: center;
 }
 
 /* Mobile Tweaks for Big Squares */
