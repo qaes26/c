@@ -1,13 +1,16 @@
 import React from 'react';
 import Footer from './Footer';
 
-const LessonView = ({ lesson }) => {
+const LessonView = ({ lesson, onOpenMenu }) => {
     if (!lesson) {
         return (
             <div className="content-area">
                 <div className="content-wrapper" style={{ textAlign: 'center', marginTop: '10%' }}>
                     <h2>مرحباً بك في كورس C++ الشامل</h2>
-                    <p>اختر درساً من القائمة الجانبية للبدء.</p>
+                    <p style={{ marginBottom: '2rem' }}>اختر درساً من القائمة لبدء التعلم.</p>
+                    <button className="btn btn-primary" onClick={onOpenMenu}>
+                        تصفح الدروس 📚
+                    </button>
                 </div>
                 <Footer />
             </div>

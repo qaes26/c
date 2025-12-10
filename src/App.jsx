@@ -66,7 +66,10 @@ const App = () => {
         {isQuizMode ? (
           <QuizView />
         ) : (
-          <LessonView lesson={selectedLesson} />
+          <LessonView
+            lesson={selectedLesson}
+            onOpenMenu={() => setIsMobileMenuOpen(true)}
+          />
         )}
       </div>
     </div>
