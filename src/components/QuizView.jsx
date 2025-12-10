@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { quizData } from '../data/quizData';
+import { quizQuestions } from '../data/quizData';
 
 const QuizView = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState({});
     const [showResult, setShowResult] = useState(false);
 
-    const currentQuestion = quizData[currentQuestionIndex];
-    const totalQuestions = quizData.length;
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const totalQuestions = quizQuestions.length;
 
     const handleAnswerSelect = (optionIndex) => {
         setUserAnswers({
@@ -32,8 +32,8 @@ const QuizView = () => {
 
     const calculateScore = () => {
         let score = 0;
-        quizData.forEach(q => {
-            if (userAnswers[q.id] === q.correctAnswer) {
+        quizQuestions.forEach(q => {
+            if (userAnswers[q.id] === q.answer) {
                 score++;
             }
         });
